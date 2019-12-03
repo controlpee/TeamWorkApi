@@ -11,6 +11,9 @@ const fs = require('fs');
 
 const mainRoute = require('./routes/mainRoute');
 
+const {verifyToken} = require('./middlewares/oauthMiddleware');
+
+
 
 
 
@@ -55,17 +58,8 @@ app.use((req, res, next) => {
     app.use(bodyParser.urlencoded({extended: false}));
     app.use('/image', express.static(path.join(__dirname, 'image')));
    
-    app.use('/api/v1/auth', oauthRoute);
+    app.use('/api/v1/auth', verifyToken);
 
-app.use('/api/v1/', mainRoute);
+app.use('/api/v1/', verifyToken);
 
-
-app.use('*', (req, res) => {
-  
-  res.status(404);
-    
-  res.send({
-      error: 'page not found'
-    });
-  });
 module.exports = app;
