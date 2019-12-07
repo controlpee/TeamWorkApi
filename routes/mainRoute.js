@@ -1,69 +1,51 @@
 require('dotenv').config();
 
 const express = require('express');
-const {createArticle} = require('../controllers/main')
-const {createArticleComment} = require('../controllers/main')
-const {createGif} = require('../controllers/main')
-const {createGifComment} = require('../controllers/main')
-const {getOneArticle} = require('../controllers/main')
-const {putArticle} = require('../controllers/main')
-const {getOneGif} = require('../controllers/main')
-const {getAll} = require('../controllers/main')
-const {deleteArticle} = require('../controllers/main')
-const {deleteGif} = require('../controllers/main')
-
 
 const router = express.Router();
+const {
+  postArticle,
+  postArticleComment,
+  postGif,
+  postGifComment,
+  patchArticle,
+  deleteArticle,deleteGif,getAll, getOneGif, getOneArticle
+} = require('../controllers/main');
 
 
-// const {
-//   createArticle,
-//   createArticleComment,
-//   createGif,
-//   createGifComment,
-//   putArticle,
-//   deleteArticle,
-//   deleteGif,
-//   getAll,
-//   getOneGif,
-//   getOneArticle
-// }
-
-
-
-
-                                                                                                                    
-
+const { verifyToken } = require('../middlewares/oauthMiddleware');
 
 
 // post routes
 
-router.post('/articles', createArticle);
+router.post('/articles', verifyToken, postArticle);
 
-router.post('/articles/:id/comment', createArticleComment);
+router.post('/articles/:id/comment', verifyToken, postArticleComment);
 
-router.post('/gifs', createGif);                                                                                                                                  
+router.post('/gifs/:id/comment', verifyToken, postGifComment);
 
-router.post('/gifs/:id/comment', createGifComment);
+router.post('/gifs', verifyToken, postGif);
+
 
 
 // patch route
 
-router.put('/articles/:id', putArticle);
+router.patch('/articles/:id', verifyToken, patchArticle);
+
 
 // delete routes
-router.delete('/articles/:id', deleteArticle);
+router.delete('/articles/:id', verifyToken, deleteArticle);
 
-router.delete('/gifs/:id', deleteGif);
+router.delete('/gifs/:id', verifyToken, deleteGif);
 
 
 // get routes
 
-router.get('/feed', getAll);
+router.get('/feed', verifyToken, getAll);
 
-router.get('/gifs/:id', getOneGif);
+router.get('/gifs/:id', verifyToken, getOneGif);
 
-router.get('/articles/:id', getOneArticle);
+router.get('/articles/:id', verifyToken, getOneArticle);
 
 
 module.exports = router;
